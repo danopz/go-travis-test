@@ -1,0 +1,40 @@
+language: go
+sudo: false
+matrix:
+  include:
+    - go: 1.x
+      env: LATEST=true
+    - go: 1.9
+    - go: 1.10
+    - go: tip
+  allow_failures:
+    - go: tip
+
+before_install:
+  - go get github.com/golang/dep/cmd/dep
+  - go get github.com/mitchellh/gox
+
+install:
+  - # skip
+
+script:
+  - dep ensure
+  - diff -u <(echo -n) <(gofmt -d .)
+  - go vet $(go list ./... | grep -v /vendor/)
+  - go test -v -race ./...
+  # Only build binaries from the latest Go release.
+  - if [ "${LATEST}" = "true" ]; then gox -os="linux darwin windows" -arch="amd64" -output="simple-calc.{{.OS}}.{{.Arch}}" -verbose ./...; fi
+
+deploy:
+  provider: releases
+  skip_cleanup: true
+  api_key:
+    secure: JWDNYfMmoCCSNAQSeoGzTyMlwTfGeeX3xMb+ovkXw7xgRN41/iIU6AfZ6Piatn3bMM+LLIPJxgcsIChidhyvS1bjsyTGBfEoMQ7+m/vC6y9P/4jN0sDxuyXvkWjenrggJRsGNXHCo4oeDcCL3y4G6av+pJzriXaeQS9RpRXoO2U8CpsGT/tch3ZAfEeGERjiMAENkg1onXOAI5bqqyer5KRsBJ7SYOIakwVqGJBZmiAtXF/oMeokV4xiT57YrmEnL5APXkG3ciljqdtSiwepOhKgMBqqYBMPMF58G1kxG6T0mBJRYTE+viTOmGyCkVEwAPIU3PUs7BnvKwpBZ8vmYTU6PAv6LuCb1rXeTKEsQhv6kS+Cp/F6By5RanKYsNyt2ShL3KhAgLQtGdlyc5uJJMof/OAsmTbPLHbSVhas4Bit2Zi7OPcxXXFtpzMRfj9j75aYwoheOLE/NzmGcTZ22UCQUOmFzBQ/v4os8husHmlHaAF9XkPZYKc+/vwX9b8AYDiR7of8YNa4qDJbJ9uneqtWjCQGWpNFeajeXr+RVdZl9QeHNNRLW19qtGVYUKY43SFHUVMdpdYYaeKSKT+ApJfdK5wsvk0Mil0IKau6RYZED4amsZOgartj4wAEXpDRJguMoK3YVrVP3MUUUD0aafP5tD4W52tRRM8SThRSIFA=
+  file:
+  - simple-calc.windows.amd64.exe
+  - simple-calc.darwin.amd64
+  - simple-calc.linux.amd64
+  on:
+    repo: danopz/go-travis-test
+    tags: true
+    condition: $LATEST = true
