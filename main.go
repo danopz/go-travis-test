@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
-	"strconv"
-	"os"
-	"log"
-	"strings"
-	"regexp"
 	"github.com/fatih/color"
+	"log"
+	"os"
+	"regexp"
+	"strconv"
+	"strings"
 )
 
 type calculate func(float64, float64) float64

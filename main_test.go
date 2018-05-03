@@ -1,9 +1,9 @@
 package main
 
 import (
-	"testing"
-	"strings"
 	"github.com/fatih/color"
+	"strings"
+	"testing"
 )
 
 func calculatorTester(c calculator, x, y, res float64) bool {
@@ -67,8 +67,7 @@ func TestParse(t *testing.T) {
 
 func TestParseInvalid(t *testing.T) {
 	testers := [][]string{
-		{
-		},
+		{},
 		{
 			"11",
 		},
@@ -108,25 +107,25 @@ func TestFormat(t *testing.T) {
 			x:        1,
 			y:        1,
 			operator: "+",
-			calc: operators["+"],
+			calc:     operators["+"],
 		},
 		formattedCalculator("100.12 - 20 =", "80.12"): {
 			x:        100.12,
 			y:        20,
 			operator: "-",
-			calc: operators["-"],
+			calc:     operators["-"],
 		},
 		formattedCalculator("1337 * 42 =", "56154"): {
 			x:        1337,
 			y:        42,
 			operator: "*",
-			calc: operators["*"],
+			calc:     operators["*"],
 		},
 		formattedCalculator("100 / 125 =", "0.8"): {
 			x:        100,
 			y:        125,
 			operator: "/",
-			calc: operators["/"],
+			calc:     operators["/"],
 		},
 	}
 
